@@ -19,19 +19,19 @@ class SymulacjaKaskady(QWidget):
         self.kolor_granatowy = QColor("navy")
         self.kolor_jasnoniebieski = QColor("lightskyblue")
 
-        self.z1 = Zbiornik(50, 50, nazwa="Z1 (Źródło)", kolor_cieczy=self.kolor_zielony)
+        self.z1 = Zbiornik(50, 50, nazwa="Z1", kolor_cieczy=self.kolor_zielony)
         self.z1.aktualna_ilosc = 100.0
         self.z1.aktualizuj_poziom()
 
-        self.z2 = Zbiornik(220, 225, nazwa="Z2 (Filtr)", kolor_cieczy=self.kolor_zielony)
+        self.z2 = Zbiornik(220, 225, nazwa="Z2", kolor_cieczy=self.kolor_zielony)
         self.z2.ma_filtr = True
         
-        self.z3 = Zbiornik(390, 400, nazwa="Z3 (Grzałka)", kolor_cieczy=self.kolor_zielony)
+        self.z3 = Zbiornik(390, 400, nazwa="Z3", kolor_cieczy=self.kolor_zielony)
         self.z3.ma_grzalke = True
         
-        self.z4 = Zbiornik(560, 575, nazwa="Z4 (Bufor)", kolor_cieczy=self.kolor_zielony)
+        self.z4 = Zbiornik(560, 575, nazwa="Z4", kolor_cieczy=self.kolor_zielony)
         
-        self.b = Budynek(520, 80, nazwa="Dom (Odbiorca)")
+        self.b = Budynek(520, 80, nazwa="Odbiorca")
         
         self.zbiorniki = [self.z1, self.z2, self.z3, self.z4, self.b]
 
@@ -52,12 +52,12 @@ class SymulacjaKaskady(QWidget):
 
         p_start4 = self.z4.punkt_dol_srodek()
         p_koniec4 = self.b.punkt_gora_srodek()
-        
+            
         self.rura4 = Rura([
             p_start4,
             (p_start4[0], p_start4[1] + 20),
-            (660, p_start4[1] + 20),
-            (660, p_koniec4[1] - 10),
+            (685, p_start4[1] + 20),
+            (685, p_koniec4[1] - 10),
             (p_koniec4[0], p_koniec4[1] - 10),
             p_koniec4
         ])
@@ -92,22 +92,17 @@ class SymulacjaKaskady(QWidget):
     def napelnij_z2_max(self):
         self.z2.aktualna_ilosc = 100.0
         self.z2.aktualizuj_poziom()
-        
         self.z2.zmien_kolor(self.kolor_zielony)
-        
         self.z2.postep_filtracji = 0
         self.z2.proces_zakonczony = False
-        
         self.update()
 
     def napelnij_z3_max(self):
         self.z3.aktualna_ilosc = 100.0
         self.z3.aktualizuj_poziom()
-        
         self.z3.zmien_kolor(self.kolor_granatowy)
         self.z3.temperatura = 20.0
         self.z3.proces_zakonczony = False
-        
         self.update()
 
     def zmien_predkosc(self, wartosc):
@@ -124,7 +119,6 @@ class SymulacjaKaskady(QWidget):
     def reset_symulacji(self):
         self.zawor_glowny_otwarty = False
         self.czy_oprozniac_z4 = False
-        
         self.panel.ustaw_stan_przycisku_z1(False)
         self.panel.aktualizuj_dostepnosc_z4(False)
 
@@ -150,7 +144,7 @@ class SymulacjaKaskady(QWidget):
         if self.z2.czy_pusty(): self.z2.reset_procesu()
         if self.z3.czy_pusty(): self.z3.reset_procesu()
 
-        self.panel.aktualizuj_monitory(self.z2.postep_filtracji, self.z3.temperatura)
+        self.panel.aktualizuj_monitory(self.z2.postep_filtracji, self.z3.temperatura, self.b.aktualna_ilosc)
         
         mozna_wcisnac_oproznianie = self.z4.czy_pelny() and not self.czy_oprozniac_z4
         self.panel.aktualizuj_dostepnosc_z4(mozna_wcisnac_oproznianie)
@@ -234,14 +228,10 @@ class SymulacjaKaskady(QWidget):
             y_koniec = y_start + 30
         else:
             calkowita_wysokosc_zbiornika = zbiornik_docelowy.height
-            
             obecny_poziom_wody = zbiornik_docelowy.height * zbiornik_docelowy.poziom
-            
             gora_zbiornika_y = zbiornik_docelowy.y
-
             odleglosc_do_tafli = calkowita_wysokosc_zbiornika - obecny_poziom_wody
             y_tafli = gora_zbiornika_y + odleglosc_do_tafli
-            
             y_koniec = y_tafli
 
             if y_koniec < y_start:

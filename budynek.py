@@ -40,8 +40,5 @@ class Budynek(Zbiornik):
         painter.setPen(Qt.white)
         painter.drawText(int(self.x), int(self.y + self.height + 5), int(self.width), 20, Qt.AlignCenter, self.nazwa)
         
-        painter.setPen(QColor("#00FF00"))
-        painter.drawText(int(self.x), int(self.y + self.height + 25), int(self.width), 20, Qt.AlignCenter, f"Pobrano: {int(self.aktualna_ilosc)}")
-
     def punkt_gora_srodek(self):
         return (self.x + self.width - 25, self.y - 25)

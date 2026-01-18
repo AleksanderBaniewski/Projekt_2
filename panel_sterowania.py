@@ -27,6 +27,10 @@ class PanelSterowania(QWidget):
         self.lbl_monitor_temp.setGeometry(20, 65, 200, 20)
         self.lbl_monitor_temp.setStyleSheet("color: #ff4500; font-weight: bold; background: transparent;")
 
+        self.lbl_monitor_woda = QLabel("Odbiorca: 0 L", self)
+        self.lbl_monitor_woda.setGeometry(20, 90, 200, 20)
+        self.lbl_monitor_woda.setStyleSheet("color: #00FF00; font-weight: bold; background: transparent;")
+
         self.lbl_suwak = QLabel("Szybkość przepływu:", self)
         self.lbl_suwak.setGeometry(250, 20, 150, 20)
         self.lbl_suwak.setStyleSheet("color: white; background: transparent;")
@@ -46,7 +50,7 @@ class PanelSterowania(QWidget):
         self.lbl_wartosc_suwaka.setGeometry(440, 20, 40, 20)
         self.lbl_wartosc_suwaka.setStyleSheet("color: #3498db; font-weight: bold; background: transparent;")
 
-        btn_y = 100 
+        btn_y = 120 
         
         self.btn_z1 = QPushButton("Otwórz Z1", self)
         self.btn_z1.setGeometry(20, btn_y, 100, 35)
@@ -66,22 +70,16 @@ class PanelSterowania(QWidget):
         self.btn_z4.setEnabled(False)
         self.btn_z4.clicked.connect(self.sygnal_steruj_z4.emit)
 
-        btn_y_dol = 145
-
-        style_napelnij = """
-            QPushButton { background-color: #663399; color: white; border-radius: 5px; font-size: 11px; }
-            QPushButton:hover { background-color: #7b40b5; }
-            QPushButton:pressed { background-color: #4b2570; }
-        """
+        btn_y_dol = 160
 
         self.btn_napelnij_z2 = QPushButton("Napełnij Z2 (100%)", self)
         self.btn_napelnij_z2.setGeometry(20, btn_y_dol, 110, 30)
-        self.btn_napelnij_z2.setStyleSheet(style_napelnij)
+        self.btn_napelnij_z2.setStyleSheet("background-color: #663399; color: white; border-radius: 5px; font-size: 11px;")
         self.btn_napelnij_z2.clicked.connect(self.sygnal_napelnij_z2.emit)
 
         self.btn_napelnij_z3 = QPushButton("Napełnij Z3 (100%)", self)
         self.btn_napelnij_z3.setGeometry(140, btn_y_dol, 110, 30)
-        self.btn_napelnij_z3.setStyleSheet(style_napelnij)
+        self.btn_napelnij_z3.setStyleSheet("background-color: #663399; color: white; border-radius: 5px; font-size: 11px;")
         self.btn_napelnij_z3.clicked.connect(self.sygnal_napelnij_z3.emit)
 
 
@@ -90,9 +88,10 @@ class PanelSterowania(QWidget):
         self.lbl_wartosc_suwaka.setText(f"{predkosc:.1f}x")
         self.sygnal_zmien_predkosc.emit(wartosc)
 
-    def aktualizuj_monitory(self, postep_filtracji, temperatura):
+    def aktualizuj_monitory(self, postep_filtracji, temperatura, ilosc_wody):
         self.lbl_monitor_filtr.setText(f"Filtracja (Z2): {int(postep_filtracji)}%")
         self.lbl_monitor_temp.setText(f"Temp. (Z3): {temperatura:.1f}°C")
+        self.lbl_monitor_woda.setText(f"Odbiorca: {int(ilosc_wody)} L")
 
     def ustaw_stan_przycisku_z1(self, czy_otwarty):
         if czy_otwarty:

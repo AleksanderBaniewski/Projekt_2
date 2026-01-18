@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton
-from PyQt5.QtCore import Qt, QTimer, QPointF
+from PyQt5.QtCore import Qt, QTimer, QPointF, QRect
 from PyQt5.QtGui import QPainter, QColor, QPen, QPainterPath
 
 class Zbiornik:
@@ -76,7 +76,12 @@ class Zbiornik:
         painter.drawRect(int(self.x), int(self.y), int(self.width), int(self.height))
 
         painter.setPen(Qt.white)
-        painter.drawText(int(self.x), int(self.y - 10), self.nazwa)
+        font = painter.font()
+        font.setBold(True)
+        painter.setFont(font)
+        
+        obszar_tekstu = QRect(int(self.x - 55), int(self.y), 50, int(self.height))
+        painter.drawText(obszar_tekstu, Qt.AlignRight | Qt.AlignVCenter, self.nazwa)
 
         if self.ma_filtr:
             if (self.czy_pelny() and not self.proces_zakonczony):
@@ -87,11 +92,6 @@ class Zbiornik:
             for i in range(1, 5):
                 y_pos = self.y + (self.height / 5) * i
                 painter.drawLine(int(self.x), int(y_pos), int(self.x + self.width), int(y_pos))
-            
-            if self.aktualna_ilosc > 5:
-                painter.setPen(Qt.yellow)
-                status = "Filtrowanie..." if self.postep_filtracji < 100 else "GOTOWE"
-                painter.drawText(int(self.x + 5), int(self.y + 20), f"{status}")
 
         if self.ma_grzalke:
             pen_grzalka = QPen(QColor("#FF4500"), 3)
@@ -112,6 +112,3 @@ class Zbiornik:
                 y_offset = -10 if i % 2 == 0 else 0
                 path.lineTo(x_pos, start_y + y_offset)
             painter.drawPath(path)
-
-            painter.setPen(Qt.white)
-            painter.drawText(int(self.x + self.width + 10), int(self.y + self.height/2), f"{self.temperatura:.1f}°C")
